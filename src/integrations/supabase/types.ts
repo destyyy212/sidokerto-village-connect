@@ -14,16 +14,192 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      galeri: {
+        Row: {
+          created_at: string
+          gambar_url: string
+          id: string
+          judul: string
+          keterangan: string
+          updated_at: string
+          urutan: number
+        }
+        Insert: {
+          created_at?: string
+          gambar_url?: string
+          id?: string
+          judul: string
+          keterangan?: string
+          updated_at?: string
+          urutan?: number
+        }
+        Update: {
+          created_at?: string
+          gambar_url?: string
+          id?: string
+          judul?: string
+          keterangan?: string
+          updated_at?: string
+          urutan?: number
+        }
+        Relationships: []
+      }
+      konten_religi: {
+        Row: {
+          created_at: string
+          id: string
+          isi: string
+          judul: string
+          slug: string
+          updated_at: string
+          urutan: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          isi?: string
+          judul: string
+          slug: string
+          updated_at?: string
+          urutan?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          isi?: string
+          judul?: string
+          slug?: string
+          updated_at?: string
+          urutan?: number
+        }
+        Relationships: []
+      }
+      perangkat_desa: {
+        Row: {
+          created_at: string
+          foto_url: string
+          id: string
+          jabatan: string
+          nama: string
+          updated_at: string
+          urutan: number
+        }
+        Insert: {
+          created_at?: string
+          foto_url?: string
+          id?: string
+          jabatan: string
+          nama: string
+          updated_at?: string
+          urutan?: number
+        }
+        Update: {
+          created_at?: string
+          foto_url?: string
+          id?: string
+          jabatan?: string
+          nama?: string
+          updated_at?: string
+          urutan?: number
+        }
+        Relationships: []
+      }
+      profil_desa: {
+        Row: {
+          alamat_kantor: string
+          created_at: string
+          email: string
+          id: string
+          jam_layanan: string
+          jumlah_dusun: number
+          jumlah_penduduk: number
+          jumlah_rt: number
+          jumlah_rw: number
+          maps_embed_url: string
+          misi: string[]
+          nama_desa: string
+          sejarah: string
+          telepon: string
+          updated_at: string
+          visi: string
+          wilayah: string
+        }
+        Insert: {
+          alamat_kantor?: string
+          created_at?: string
+          email?: string
+          id?: string
+          jam_layanan?: string
+          jumlah_dusun?: number
+          jumlah_penduduk?: number
+          jumlah_rt?: number
+          jumlah_rw?: number
+          maps_embed_url?: string
+          misi?: string[]
+          nama_desa?: string
+          sejarah?: string
+          telepon?: string
+          updated_at?: string
+          visi?: string
+          wilayah?: string
+        }
+        Update: {
+          alamat_kantor?: string
+          created_at?: string
+          email?: string
+          id?: string
+          jam_layanan?: string
+          jumlah_dusun?: number
+          jumlah_penduduk?: number
+          jumlah_rt?: number
+          jumlah_rw?: number
+          maps_embed_url?: string
+          misi?: string[]
+          nama_desa?: string
+          sejarah?: string
+          telepon?: string
+          updated_at?: string
+          visi?: string
+          wilayah?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +326,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as KontakRouteImport } from './routes/kontak'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ReligiRouteImport } from './routes/religi'
@@ -17,6 +18,11 @@ import { Route as ReligiRouteImport } from './routes/religi'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KontakRoute = KontakRouteImport.update({
@@ -37,12 +43,14 @@ const ReligiRoute = ReligiRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/kontak': typeof KontakRoute
   '/profil': typeof ProfilRoute
   '/religi': typeof ReligiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/kontak': typeof KontakRoute
   '/profil': typeof ProfilRoute
   '/religi': typeof ReligiRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/kontak': typeof KontakRoute
   '/profil': typeof ProfilRoute
   '/religi': typeof ReligiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kontak' | '/profil' | '/religi'
+  fullPaths: '/' | '/auth' | '/kontak' | '/profil' | '/religi'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kontak' | '/profil' | '/religi'
-  id: '__root__' | '/' | '/kontak' | '/profil' | '/religi'
+  to: '/' | '/auth' | '/kontak' | '/profil' | '/religi'
+  id: '__root__' | '/' | '/auth' | '/kontak' | '/profil' | '/religi'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   KontakRoute: typeof KontakRoute
   ProfilRoute: typeof ProfilRoute
   ReligiRoute: typeof ReligiRoute
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kontak': {
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   KontakRoute: KontakRoute,
   ProfilRoute: ProfilRoute,
   ReligiRoute: ReligiRoute,

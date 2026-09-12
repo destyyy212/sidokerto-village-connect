@@ -83,4 +83,32 @@ export const galeriQuery = queryOptions({
   },
 });
 
+export type Statistik = {
+  id: string;
+  kategori: string;
+  label: string;
+  jumlah: number;
+  urutan: number;
+};
+
+export const KATEGORI_LABEL: Record<string, string> = {
+  jenis_kelamin: "Jenis Kelamin",
+  usia: "Kelompok Usia",
+  pendidikan: "Pendidikan",
+  pekerjaan: "Pekerjaan",
+};
+
+export const statistikQuery = queryOptions({
+  queryKey: ["statistik_penduduk"],
+  queryFn: async (): Promise<Statistik[]> => {
+    const { data, error } = await db
+      .from("statistik_penduduk")
+      .select("*")
+      .order("kategori")
+      .order("urutan");
+    if (error) throw new Error(error.message);
+    return (data ?? []) as Statistik[];
+  },
+});
+
 export const table = db;

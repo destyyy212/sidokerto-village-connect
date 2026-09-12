@@ -164,6 +164,36 @@ export type Database = {
         }
         Relationships: []
       }
+      statistik_penduduk: {
+        Row: {
+          created_at: string
+          id: string
+          jumlah: number
+          kategori: string
+          label: string
+          updated_at: string
+          urutan: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jumlah?: number
+          kategori: string
+          label: string
+          updated_at?: string
+          urutan?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jumlah?: number
+          kategori?: string
+          label?: string
+          updated_at?: string
+          urutan?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

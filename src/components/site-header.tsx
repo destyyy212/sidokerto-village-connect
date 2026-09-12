@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import logoSidoarjo from "@/assets/logo-sidoarjo.svg";
 
 const navItems = [
   { to: "/", label: "Beranda" },
@@ -12,9 +13,13 @@ export function SiteHeader() {
     <header className="relative z-20 px-4 pt-4">
       <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl glass-panel px-5 py-3">
         <Link to="/" className="flex items-center gap-3">
-          <div className="grid size-9 place-items-center rounded-xl gradient-brand font-display text-sm font-bold text-brand-foreground">
-            SD
-          </div>
+          <img
+            src={logoSidoarjo}
+            alt="Lambang Kabupaten Sidoarjo"
+            width={40}
+            height={40}
+            className="size-10 object-contain"
+          />
           <div className="leading-tight">
             <p className="font-display text-sm font-semibold text-ink">Sidokerto Terpadu</p>
             <p className="text-[10px] uppercase tracking-[0.18em] text-brand/70">

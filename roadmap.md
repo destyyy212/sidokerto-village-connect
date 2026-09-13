@@ -7,4 +7,3 @@
 - [x] Gambar pada halaman Pemerintahan
 - [x] Logo "SD" diganti logo Kabupaten Sidoarjo
 - [x] Verifikasi tampilan & fungsi
-- [ ] Beri peran admin ke akun pertama (menunggu pengguna mendaftar di /auth)

@@ -157,7 +157,7 @@ function ProfilFields({ profil }: { profil: ProfilDesa | null }) {
       : table.from("profil_desa").insert(payload);
     const { error } = await q;
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Profil desa tersimpan");
     invalidate();
   }
@@ -200,9 +200,9 @@ function PerangkatEditor() {
   const [baru, setBaru] = useState({ nama: "", jabatan: "", foto_url: "" });
 
   async function tambah() {
-    if (!baru.nama || !baru.jabatan) return toast.error("Nama dan jabatan wajib diisi");
+    if (!baru.nama || !baru.jabatan) { toast.error("Nama dan jabatan wajib diisi"); return; }
     const { error } = await table.from("perangkat_desa").insert({ ...baru, urutan: data.length + 1 });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setBaru({ nama: "", jabatan: "", foto_url: "" });
     toast.success("Perangkat ditambahkan");
     invalidate();
@@ -234,14 +234,14 @@ function PerangkatRow({ item, onDone }: { item: Perangkat; onDone: () => void })
   const [f, setF] = useState({ nama: item.nama, jabatan: item.jabatan, foto_url: item.foto_url, urutan: item.urutan });
   async function simpan() {
     const { error } = await table.from("perangkat_desa").update(f).eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
   }
   async function hapus() {
     if (!confirm(`Hapus ${item.nama}?`)) return;
     const { error } = await table.from("perangkat_desa").delete().eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onDone();
   }
   return (
@@ -265,9 +265,9 @@ function StatistikEditor() {
   const [baru, setBaru] = useState({ kategori: "jenis_kelamin", label: "", jumlah: 0 });
 
   async function tambah() {
-    if (!baru.label) return toast.error("Label wajib diisi");
+    if (!baru.label) { toast.error("Label wajib diisi"); return; }
     const { error } = await table.from("statistik_penduduk").insert({ ...baru, urutan: data.length + 1 });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setBaru({ ...baru, label: "", jumlah: 0 });
     toast.success("Data ditambahkan");
     invalidate();
@@ -314,14 +314,14 @@ function StatRow({ item, onDone }: { item: Statistik; onDone: () => void }) {
   const [f, setF] = useState({ label: item.label, jumlah: item.jumlah, urutan: item.urutan });
   async function simpan() {
     const { error } = await table.from("statistik_penduduk").update(f).eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
   }
   async function hapus() {
     if (!confirm(`Hapus ${item.label}?`)) return;
     const { error } = await table.from("statistik_penduduk").delete().eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onDone();
   }
   return (
@@ -354,7 +354,7 @@ function ReligiRow({ item, onDone }: { item: KontenReligi; onDone: () => void })
   const [f, setF] = useState({ judul: item.judul, isi: item.isi });
   async function simpan() {
     const { error } = await table.from("konten_religi").update(f).eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
   }
@@ -375,9 +375,9 @@ function GaleriEditor() {
   const [baru, setBaru] = useState({ judul: "", keterangan: "", gambar_url: "" });
 
   async function tambah() {
-    if (!baru.judul || !baru.gambar_url) return toast.error("Judul dan URL gambar wajib diisi");
+    if (!baru.judul || !baru.gambar_url) { toast.error("Judul dan URL gambar wajib diisi"); return; }
     const { error } = await table.from("galeri").insert({ ...baru, urutan: data.length + 1 });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setBaru({ judul: "", keterangan: "", gambar_url: "" });
     toast.success("Foto ditambahkan");
     invalidate();
@@ -407,14 +407,14 @@ function GaleriRow({ item, onDone }: { item: Galeri; onDone: () => void }) {
   const [f, setF] = useState({ judul: item.judul, keterangan: item.keterangan, gambar_url: item.gambar_url });
   async function simpan() {
     const { error } = await table.from("galeri").update(f).eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
   }
   async function hapus() {
     if (!confirm(`Hapus ${item.judul}?`)) return;
     const { error } = await table.from("galeri").delete().eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onDone();
   }
   return (

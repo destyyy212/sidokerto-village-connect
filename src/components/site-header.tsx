@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import logoSidoarjo from "@/assets/logo-sidoarjo.svg";
+import { useAuth } from "@/hooks/use-auth";
 
 const navItems = [
   { to: "/", label: "Beranda" },
@@ -9,6 +10,7 @@ const navItems = [
 ] as const;
 
 export function SiteHeader() {
+  const { session } = useAuth();
   return (
     <header className="relative z-20 px-4 pt-4">
       <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl glass-panel px-5 py-3">
@@ -44,7 +46,7 @@ export function SiteHeader() {
           to="/admin"
           className="rounded-xl gradient-brand px-4 py-2 text-sm font-semibold text-brand-foreground shadow-md"
         >
-          Masuk Admin
+          {session ? "Panel Admin" : "Masuk Admin"}
         </Link>
       </nav>
     </header>

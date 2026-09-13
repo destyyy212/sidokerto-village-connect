@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/page-shell";
-import { profilQuery, perangkatQuery } from "@/lib/desa";
+import { profilQuery, perangkatQuery, statistikQuery } from "@/lib/desa";
+import { StatistikPenduduk } from "@/components/statistik-penduduk";
+import kantorImg from "@/assets/kantor-desa.jpg";
 
 export const Route = createFileRoute("/profil")({
   head: () => ({
@@ -23,6 +25,7 @@ export const Route = createFileRoute("/profil")({
     await Promise.all([
       context.queryClient.ensureQueryData(profilQuery),
       context.queryClient.ensureQueryData(perangkatQuery),
+      context.queryClient.ensureQueryData(statistikQuery),
     ]);
   },
   component: Profil,
@@ -38,16 +41,43 @@ export const Route = createFileRoute("/profil")({
 function Profil() {
   const { data: profil } = useSuspenseQuery(profilQuery);
   const { data: perangkat } = useSuspenseQuery(perangkatQuery);
+  const { data: statistik } = useSuspenseQuery(statistikQuery);
 
   return (
     <PageShell>
       <section className="relative z-10 px-4 pt-8">
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl glass-panel">
+          <div className="relative h-64 md:h-80">
+            <img
+              src={kantorImg}
+              alt="Kantor Desa Sidokerto, Kecamatan Buduran, Kabupaten Sidoarjo"
+              width={1280}
+              height={768}
+              className="absolute inset-0 size-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-8">
+              <span className="text-xs font-semibold tracking-[0.18em] uppercase text-sky-200">
+                Profil & Pemerintahan
+              </span>
+              <h1 className="mt-1 text-3xl font-extrabold text-white md:text-4xl">
+                {profil?.nama_desa ?? "Desa Sidokerto"}
+              </h1>
+              <p className="text-sm font-medium text-white/80">
+                {profil?.wilayah ?? "Kec. Buduran · Kab. Sidoarjo · Jawa Timur"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative z-10 px-4 pt-5">
         <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-[1.3fr_1fr]">
           <div className="rounded-3xl glass-panel p-8">
             <span className="text-xs font-semibold tracking-[0.18em] uppercase text-accent-sky">
               Profil Desa
             </span>
-            <h1 className="mt-2 text-3xl font-extrabold text-ink">Sejarah Singkat</h1>
+            <h2 className="mt-2 text-3xl font-extrabold text-ink">Sejarah Singkat</h2>
             <p className="mt-4 text-sm leading-relaxed whitespace-pre-line text-ink/65">
               {profil?.sejarah}
             </p>
@@ -67,6 +97,8 @@ function Profil() {
           </div>
         </div>
       </section>
+
+      <StatistikPenduduk data={statistik} total={profil?.jumlah_penduduk ?? 0} />
 
       <section className="relative z-10 px-4 pt-5 pb-16">
         <div className="mx-auto max-w-6xl">

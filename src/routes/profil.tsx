@@ -55,15 +55,15 @@ function Profil() {
               height={768}
               className="absolute inset-0 size-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/25 to-transparent" />
             <div className="absolute bottom-0 left-0 p-8">
               <span className="text-xs font-semibold tracking-[0.18em] uppercase text-sky-200">
                 Profil & Pemerintahan
               </span>
-              <h1 className="mt-1 text-3xl font-extrabold text-white md:text-4xl">
+              <h1 className="mt-1 text-3xl font-extrabold text-brand-foreground md:text-4xl">
                 {profil?.nama_desa ?? "Desa Sidokerto"}
               </h1>
-              <p className="text-sm font-medium text-white/80">
+              <p className="text-sm font-medium text-brand-foreground/80">
                 {profil?.wilayah ?? "Kec. Buduran · Kab. Sidoarjo · Jawa Timur"}
               </p>
             </div>

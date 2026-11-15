@@ -7,5 +7,5 @@
 - [x] Gambar pada halaman Pemerintahan
 - [x] Logo "SD" diganti logo Kabupaten Sidoarjo
 - [x] Verifikasi tampilan & fungsi
-- [ ] Perbaiki halaman yang gagal dimuat (521) dan verifikasi seluruh rute
-- [ ] Sediakan akun demo admin yang dapat dipakai untuk masuk
+- [ ] Perbaiki halaman yang gagal dimuat (521), telusuri kegagalan masuk/daftar, dan verifikasi seluruh rute
+- [ ] Sediakan akun demo admin yang dapat dipakai untuk masuk tanpa kendala konfirmasi

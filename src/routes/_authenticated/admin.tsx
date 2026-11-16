@@ -43,7 +43,7 @@ const tabs = [
 type TabId = (typeof tabs)[number]["id"];
 
 const inputCls =
-  "mt-1 w-full rounded-xl border border-white/70 bg-white/70 px-3 py-2 text-sm text-ink outline-none focus:ring-2 focus:ring-ring";
+  "mt-1 min-h-11 w-full rounded-xl border border-white/70 bg-white/70 px-3 py-2.5 text-sm text-ink outline-none transition focus:border-brand/40 focus:ring-2 focus:ring-ring";
 const btnPrimary =
   "rounded-xl gradient-brand px-4 py-2 text-sm font-semibold text-brand-foreground shadow-md disabled:opacity-60";
 const btnGhost = "rounded-lg border border-brand/20 bg-white/60 px-3 py-1.5 text-xs font-semibold text-brand";
@@ -135,10 +135,10 @@ function ProfilFields({ profil }: { profil: ProfilDesa | null }) {
     sejarah: profil?.sejarah ?? "",
     visi: profil?.visi ?? "",
     misi: (profil?.misi ?? []).join("\n"),
-    jumlah_dusun: profil?.jumlah_dusun ?? 0,
-    jumlah_rt: profil?.jumlah_rt ?? 0,
-    jumlah_rw: profil?.jumlah_rw ?? 0,
-    jumlah_penduduk: profil?.jumlah_penduduk ?? 0,
+    jumlah_dusun: String(profil?.jumlah_dusun ?? ""),
+    jumlah_rt: String(profil?.jumlah_rt ?? ""),
+    jumlah_rw: String(profil?.jumlah_rw ?? ""),
+    jumlah_penduduk: String(profil?.jumlah_penduduk ?? ""),
     alamat_kantor: profil?.alamat_kantor ?? "",
     jam_layanan: profil?.jam_layanan ?? "",
     telepon: profil?.telepon ?? "",
@@ -147,11 +147,18 @@ function ProfilFields({ profil }: { profil: ProfilDesa | null }) {
   });
   const [busy, setBusy] = useState(false);
   const invalidate = useInvalidate(["profil_desa"]);
-  const set = (k: keyof typeof form, v: string | number) => setForm((f) => ({ ...f, [k]: v }));
+  const set = (k: keyof typeof form, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
   async function simpan() {
     setBusy(true);
-    const payload = { ...form, misi: form.misi.split("\n").map((s) => s.trim()).filter(Boolean) };
+    const payload = {
+      ...form,
+      jumlah_dusun: Number(form.jumlah_dusun || 0),
+      jumlah_rt: Number(form.jumlah_rt || 0),
+      jumlah_rw: Number(form.jumlah_rw || 0),
+      jumlah_penduduk: Number(form.jumlah_penduduk || 0),
+      misi: form.misi.split("\n").map((s) => s.trim()).filter(Boolean),
+    };
     const q = profil
       ? table.from("profil_desa").update(payload).eq("id", profil.id)
       : table.from("profil_desa").insert(payload);
@@ -231,9 +238,9 @@ function PerangkatEditor() {
 }
 
 function PerangkatRow({ item, onDone }: { item: Perangkat; onDone: () => void }) {
-  const [f, setF] = useState({ nama: item.nama, jabatan: item.jabatan, foto_url: item.foto_url, urutan: item.urutan });
+  const [f, setF] = useState({ nama: item.nama, jabatan: item.jabatan, foto_url: item.foto_url, urutan: String(item.urutan) });
   async function simpan() {
-    const { error } = await table.from("perangkat_desa").update(f).eq("id", item.id);
+    const { error } = await table.from("perangkat_desa").update({ ...f, urutan: Number(f.urutan || 0) }).eq("id", item.id);
     if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
@@ -251,8 +258,8 @@ function PerangkatRow({ item, onDone }: { item: Perangkat; onDone: () => void })
       <Field label="URL foto" value={f.foto_url} onChange={(v) => setF({ ...f, foto_url: v })} />
       <NumField label="Urutan" value={f.urutan} onChange={(v) => setF({ ...f, urutan: v })} />
       <div className="flex gap-2">
-        <button type="button" onClick={simpan} className={btnGhost}>Simpan</button>
-        <button type="button" onClick={hapus} className={btnDanger}>Hapus</button>
+        <button type="button" onClick={simpan} className={`${btnGhost} min-h-10 flex-1 sm:flex-none`}>Simpan</button>
+        <button type="button" onClick={hapus} className={`${btnDanger} min-h-10 flex-1 sm:flex-none`}>Hapus</button>
       </div>
     </div>
   );
@@ -262,11 +269,11 @@ function PerangkatRow({ item, onDone }: { item: Perangkat; onDone: () => void })
 function StatistikEditor() {
   const { data = [] } = useQuery(statistikQuery);
   const invalidate = useInvalidate(["statistik_penduduk"]);
-  const [baru, setBaru] = useState({ kategori: "jenis_kelamin", label: "", jumlah: 0 });
+  const [baru, setBaru] = useState({ kategori: "jenis_kelamin", label: "", jumlah: "" });
 
   async function tambah() {
     if (!baru.label) { toast.error("Label wajib diisi"); return; }
-    const { error } = await table.from("statistik_penduduk").insert({ ...baru, urutan: data.length + 1 });
+    const { error } = await table.from("statistik_penduduk").insert({ ...baru, jumlah: Number(baru.jumlah || 0), urutan: data.length + 1 });
     if (error) { toast.error(error.message); return; }
     setBaru({ ...baru, label: "", jumlah: 0 });
     toast.success("Data ditambahkan");
@@ -311,9 +318,9 @@ function StatistikEditor() {
 }
 
 function StatRow({ item, onDone }: { item: Statistik; onDone: () => void }) {
-  const [f, setF] = useState({ label: item.label, jumlah: item.jumlah, urutan: item.urutan });
+  const [f, setF] = useState({ label: item.label, jumlah: String(item.jumlah), urutan: String(item.urutan) });
   async function simpan() {
-    const { error } = await table.from("statistik_penduduk").update(f).eq("id", item.id);
+    const { error } = await table.from("statistik_penduduk").update({ ...f, jumlah: Number(f.jumlah || 0), urutan: Number(f.urutan || 0) }).eq("id", item.id);
     if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
@@ -330,8 +337,8 @@ function StatRow({ item, onDone }: { item: Statistik; onDone: () => void }) {
       <NumField label="Jumlah" value={f.jumlah} onChange={(v) => setF({ ...f, jumlah: v })} />
       <NumField label="Urutan" value={f.urutan} onChange={(v) => setF({ ...f, urutan: v })} />
       <div className="flex gap-2">
-        <button type="button" onClick={simpan} className={btnGhost}>Simpan</button>
-        <button type="button" onClick={hapus} className={btnDanger}>Hapus</button>
+        <button type="button" onClick={simpan} className={`${btnGhost} min-h-10 flex-1 sm:flex-none`}>Simpan</button>
+        <button type="button" onClick={hapus} className={`${btnDanger} min-h-10 flex-1 sm:flex-none`}>Hapus</button>
       </div>
     </div>
   );
@@ -426,8 +433,8 @@ function GaleriRow({ item, onDone }: { item: Galeri; onDone: () => void }) {
       <Field label="Keterangan" value={f.keterangan} onChange={(v) => setF({ ...f, keterangan: v })} />
       <Field label="URL gambar" value={f.gambar_url} onChange={(v) => setF({ ...f, gambar_url: v })} />
       <div className="flex gap-2">
-        <button type="button" onClick={simpan} className={btnGhost}>Simpan</button>
-        <button type="button" onClick={hapus} className={btnDanger}>Hapus</button>
+        <button type="button" onClick={simpan} className={`${btnGhost} min-h-10 flex-1 sm:flex-none`}>Simpan</button>
+        <button type="button" onClick={hapus} className={`${btnDanger} min-h-10 flex-1 sm:flex-none`}>Hapus</button>
       </div>
     </div>
   );
@@ -459,15 +466,18 @@ function Field({
   );
 }
 
-function NumField({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+function NumField({ label, value, onChange }: { label: string; value: number | string; onChange: (v: string) => void }) {
   return (
     <label className="block text-sm">
       <span className="font-medium text-ink/70">{label}</span>
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        autoComplete="off"
         className={inputCls}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value) || 0)}
+        onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
       />
     </label>
   );

@@ -39,17 +39,21 @@ function AuthPage() {
         if (error) throw error;
         navigate({ to: "/admin", replace: true });
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: `${window.location.origin}/auth` },
         });
         if (error) throw error;
-        toast.success("Akun dibuat. Periksa email untuk konfirmasi, lalu minta hak admin.");
-        setMode("masuk");
+        if (data.session) {
+          navigate({ to: "/admin", replace: true });
+        } else {
+          toast.success("Akun dibuat. Periksa email untuk konfirmasi sebelum masuk.");
+          setMode("masuk");
+        }
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal memproses");
+      toast.error(authErrorMessage(err));
     } finally {
       setBusy(false);
     }
@@ -109,4 +113,15 @@ function AuthPage() {
       </section>
     </PageShell>
   );
+}
+
+function authErrorMessage(error: unknown): string {
+  const code =
+    error && typeof error === "object" && "code" in error ? String(error.code) : "";
+  if (code === "invalid_credentials") return "Email atau kata sandi tidak sesuai.";
+  if (code === "email_not_confirmed") return "Email belum dikonfirmasi.";
+  if (code === "user_already_exists") return "Email sudah terdaftar. Silakan masuk.";
+  if (code === "weak_password") return "Kata sandi minimal 6 karakter.";
+  if (code === "over_email_send_rate_limit") return "Terlalu banyak percobaan. Coba lagi nanti.";
+  return error instanceof Error ? error.message : "Gagal memproses permintaan.";
 }

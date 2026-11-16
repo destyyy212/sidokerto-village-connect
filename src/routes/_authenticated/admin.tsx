@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
+import { sanitizeNonNegativeInteger } from "@/lib/admin-numeric";
 import { PageShell } from "@/components/page-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -477,7 +478,7 @@ function NumField({ label, value, onChange }: { label: string; value: number | s
         autoComplete="off"
         className={inputCls}
         value={value}
-        onChange={(e) => onChange(e.target.value.replace(/\D/g, ""))}
+        onChange={(e) => onChange(sanitizeNonNegativeInteger(e.target.value))}
       />
     </label>
   );

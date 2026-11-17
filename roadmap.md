@@ -10,3 +10,4 @@
 - [ ] Perbaiki halaman yang gagal dimuat (521), telusuri kegagalan masuk/daftar, dan verifikasi seluruh rute
 - [ ] Sediakan akun demo admin yang dapat dipakai untuk masuk tanpa kendala konfirmasi
 - [ ] Sederhanakan seluruh formulir Panel Admin, dengan kolom angka kosong saat input baru dan menolak nilai negatif
+- [ ] Hapus field urutan dari panel, dukung unggah foto/dokumen, dan perjelas label setiap bagian admin sesuai referensi pengguna

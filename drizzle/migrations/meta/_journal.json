@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794893348657,
+      "tag": "0000_protect_sidokerto_media_storage",
+      "breakpoints": true
+    }
+  ]
+}

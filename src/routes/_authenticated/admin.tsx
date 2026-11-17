@@ -103,6 +103,10 @@ function AdminPage() {
                   </button>
                 ))}
               </div>
+              <div className="mt-6 border-b border-brand/15 pb-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand/70">Kelola data desa</p>
+                <h2 className="mt-1 text-xl font-bold text-ink">{tabs.find((item) => item.id === tab)?.label}</h2>
+              </div>
               <div className="mt-5">
                 {tab === "profil" && <ProfilForm />}
                 {tab === "perangkat" && <PerangkatEditor />}
@@ -456,7 +460,7 @@ function Field({
 }) {
   return (
     <label className="block text-sm">
-      <span className="font-medium text-ink/70">{label}</span>
+      <span className="mb-1.5 block font-semibold text-ink/80">{label}</span>
       {multiline ? (
         <textarea rows={rows} className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} />
       ) : (
@@ -480,5 +484,66 @@ function NumField({ label, value, onChange }: { label: string; value: number | s
         onChange={(e) => onChange(sanitizeNonNegativeInteger(e.target.value))}
       />
     </label>
+  );
+}
+
+function FileField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const isPdf = /\.pdf(?:$|\?)/i.test(value);
+
+  async function handleFileChange(file: File | undefined) {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadAdminFile(file);
+      onChange(url);
+      toast.success("Berkas berhasil diunggah");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Berkas gagal diunggah");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="block text-sm">
+      <span className="mb-1.5 block font-semibold text-ink/80">{label}</span>
+      <label className="flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl border border-dashed border-brand/30 bg-white/60 px-3 py-2.5 text-sm text-ink/75 transition hover:border-brand/60 hover:bg-white/80">
+        <span className="min-w-0 truncate">{uploading ? "Mengunggah berkas…" : "Pilih PNG, JPG, atau PDF"}</span>
+        <input
+          type="file"
+          accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
+          className="sr-only"
+          disabled={uploading}
+          onChange={(event) => {
+            void handleFileChange(event.currentTarget.files?.[0]);
+            event.currentTarget.value = "";
+          }}
+        />
+      </label>
+      {value && (
+        <div className="mt-2 flex flex-wrap items-center gap-3 rounded-xl border border-brand/10 bg-white/50 p-2">
+          {isPdf ? (
+            <a className="text-sm font-medium text-brand underline" href={value} target="_blank" rel="noreferrer">
+              Lihat dokumen PDF
+            </a>
+          ) : (
+            <img src={value} alt={`Pratinjau ${label}`} className="h-16 w-24 rounded-lg object-cover" />
+          )}
+          <button type="button" className={btnGhost} onClick={() => onChange("")}>
+            Hapus berkas
+          </button>
+        </div>
+      )}
+      <p className="mt-1 text-xs text-ink/50">Maksimal 20 MB</p>
+    </div>
   );
 }

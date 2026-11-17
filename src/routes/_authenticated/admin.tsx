@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { sanitizeNonNegativeInteger } from "@/lib/admin-numeric";
+import { uploadAdminFile } from "@/lib/admin-uploads";
 import { PageShell } from "@/components/page-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -223,7 +224,7 @@ function PerangkatEditor() {
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <Field label="Nama" value={baru.nama} onChange={(v) => setBaru({ ...baru, nama: v })} />
           <Field label="Jabatan" value={baru.jabatan} onChange={(v) => setBaru({ ...baru, jabatan: v })} />
-          <Field label="URL foto" value={baru.foto_url} onChange={(v) => setBaru({ ...baru, foto_url: v })} />
+          <FileField label="Foto perangkat" value={baru.foto_url} onChange={(v) => setBaru({ ...baru, foto_url: v })} />
         </div>
         <button type="button" onClick={tambah} className={`mt-3 ${btnPrimary}`}>
           Tambah
@@ -239,9 +240,9 @@ function PerangkatEditor() {
 }
 
 function PerangkatRow({ item, onDone }: { item: Perangkat; onDone: () => void }) {
-  const [f, setF] = useState({ nama: item.nama, jabatan: item.jabatan, foto_url: item.foto_url, urutan: String(item.urutan) });
+  const [f, setF] = useState({ nama: item.nama, jabatan: item.jabatan, foto_url: item.foto_url });
   async function simpan() {
-    const { error } = await table.from("perangkat_desa").update({ ...f, urutan: Number(f.urutan || 0) }).eq("id", item.id);
+    const { error } = await table.from("perangkat_desa").update(f).eq("id", item.id);
     if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
@@ -256,8 +257,7 @@ function PerangkatRow({ item, onDone }: { item: Perangkat; onDone: () => void })
     <div className="grid gap-3 rounded-2xl glass-panel p-4 sm:grid-cols-[1fr_1fr_1fr_80px_auto] sm:items-end">
       <Field label="Nama" value={f.nama} onChange={(v) => setF({ ...f, nama: v })} />
       <Field label="Jabatan" value={f.jabatan} onChange={(v) => setF({ ...f, jabatan: v })} />
-      <Field label="URL foto" value={f.foto_url} onChange={(v) => setF({ ...f, foto_url: v })} />
-      <NumField label="Urutan" value={f.urutan} onChange={(v) => setF({ ...f, urutan: v })} />
+      <FileField label="Foto perangkat" value={f.foto_url} onChange={(v) => setF({ ...f, foto_url: v })} />
       <div className="flex gap-2">
         <button type="button" onClick={simpan} className={`${btnGhost} flex-1 sm:flex-none`}>Simpan</button>
         <button type="button" onClick={hapus} className={`${btnDanger} flex-1 sm:flex-none`}>Hapus</button>
@@ -319,9 +319,9 @@ function StatistikEditor() {
 }
 
 function StatRow({ item, onDone }: { item: Statistik; onDone: () => void }) {
-  const [f, setF] = useState({ label: item.label, jumlah: item.jumlah ? String(item.jumlah) : "", urutan: String(item.urutan) });
+  const [f, setF] = useState({ label: item.label, jumlah: item.jumlah ? String(item.jumlah) : "" });
   async function simpan() {
-    const { error } = await table.from("statistik_penduduk").update({ ...f, jumlah: Number(f.jumlah || 0), urutan: Number(f.urutan || 0) }).eq("id", item.id);
+    const { error } = await table.from("statistik_penduduk").update({ ...f, jumlah: Number(f.jumlah || 0) }).eq("id", item.id);
     if (error) { toast.error(error.message); return; }
     toast.success("Tersimpan");
     onDone();
@@ -333,10 +333,9 @@ function StatRow({ item, onDone }: { item: Statistik; onDone: () => void }) {
     onDone();
   }
   return (
-    <div className="grid gap-3 rounded-2xl bg-white/50 p-3 sm:grid-cols-[1fr_120px_80px_auto] sm:items-end">
+      <div className="grid gap-3 rounded-2xl bg-white/50 p-3 sm:grid-cols-[1fr_150px_auto] sm:items-end">
       <Field label="Label" value={f.label} onChange={(v) => setF({ ...f, label: v })} />
       <NumField label="Jumlah" value={f.jumlah} onChange={(v) => setF({ ...f, jumlah: v })} />
-      <NumField label="Urutan" value={f.urutan} onChange={(v) => setF({ ...f, urutan: v })} />
       <div className="flex gap-2">
         <button type="button" onClick={simpan} className={`${btnGhost} flex-1 sm:flex-none`}>Simpan</button>
         <button type="button" onClick={hapus} className={`${btnDanger} flex-1 sm:flex-none`}>Hapus</button>
@@ -398,7 +397,7 @@ function GaleriEditor() {
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
           <Field label="Judul" value={baru.judul} onChange={(v) => setBaru({ ...baru, judul: v })} />
           <Field label="Keterangan" value={baru.keterangan} onChange={(v) => setBaru({ ...baru, keterangan: v })} />
-          <Field label="URL gambar" value={baru.gambar_url} onChange={(v) => setBaru({ ...baru, gambar_url: v })} />
+          <FileField label="Foto atau dokumen galeri" value={baru.gambar_url} onChange={(v) => setBaru({ ...baru, gambar_url: v })} />
         </div>
         <button type="button" onClick={tambah} className={`mt-3 ${btnPrimary}`}>Tambah</button>
       </div>
@@ -432,7 +431,7 @@ function GaleriRow({ item, onDone }: { item: Galeri; onDone: () => void }) {
       )}
       <Field label="Judul" value={f.judul} onChange={(v) => setF({ ...f, judul: v })} />
       <Field label="Keterangan" value={f.keterangan} onChange={(v) => setF({ ...f, keterangan: v })} />
-      <Field label="URL gambar" value={f.gambar_url} onChange={(v) => setF({ ...f, gambar_url: v })} />
+      <FileField label="Foto atau dokumen galeri" value={f.gambar_url} onChange={(v) => setF({ ...f, gambar_url: v })} />
       <div className="flex gap-2">
         <button type="button" onClick={simpan} className={`${btnGhost} flex-1 sm:flex-none`}>Simpan</button>
         <button type="button" onClick={hapus} className={`${btnDanger} flex-1 sm:flex-none`}>Hapus</button>

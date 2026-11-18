@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Store administrator-uploaded media in a private Cloud Storage bucket and display public content through signed URLs, so uploads remain admin-managed without exposing bucket listing.

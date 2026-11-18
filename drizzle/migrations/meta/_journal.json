@@ -8,6 +8,13 @@
       "when": 1794893348657,
       "tag": "0000_protect_sidokerto_media_storage",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795004390490,
+      "tag": "0001_scope_sidokerto_media_reads",
+      "breakpoints": true
     }
   ]
 }

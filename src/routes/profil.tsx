@@ -32,7 +32,7 @@ export const Route = createFileRoute("/profil")({
   errorComponent: ({ error }) => (
     <PageShell>
       <p className="mx-auto max-w-6xl px-4 py-20 text-sm text-ink/70" role="alert">
-        Halaman gagal dimuat: {error.message}
+        Halaman gagal dimuat: {error instanceof Error ? error.message : String(error)}
       </p>
     </PageShell>
   ),

@@ -371,8 +371,12 @@ function ReligiRow({ item, onDone }: { item: KontenReligi; onDone: () => void })
   }
   return (
     <div className="rounded-3xl glass-panel p-5 space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand/70">{item.slug}</p>
-      <Field label="Judul" value={f.judul} onChange={(v) => setF({ ...f, judul: v })} />
+      <div className="border-b border-brand/15 pb-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand/70">Konten Religi</p>
+        <h3 className="mt-1 text-lg font-bold text-ink">{item.judul}</h3>
+        <p className="mt-1 text-xs text-ink/50">Bagian: {item.slug.replaceAll("-", " ")}</p>
+      </div>
+      <Field label="Judul konten" value={f.judul} onChange={(v) => setF({ ...f, judul: v })} />
       <Field label="Isi" value={f.isi} onChange={(v) => setF({ ...f, isi: v })} multiline rows={6} />
       <button type="button" onClick={simpan} className={btnPrimary}>Simpan</button>
     </div>
@@ -430,9 +434,13 @@ function GaleriRow({ item, onDone }: { item: Galeri; onDone: () => void }) {
   }
   return (
     <div className="rounded-3xl glass-panel p-4 space-y-3">
-      {f.gambar_url && (
+      {f.gambar_url && (/\.pdf(?:$|\?)/i.test(f.gambar_url) ? (
+        <a className="block rounded-xl border border-brand/15 bg-white/60 p-4 text-sm font-semibold text-brand underline" href={f.gambar_url} target="_blank" rel="noreferrer">
+          Buka dokumen PDF galeri
+        </a>
+      ) : (
         <img src={f.gambar_url} alt={f.judul} loading="lazy" className="aspect-video w-full rounded-xl object-cover" />
-      )}
+      ))}
       <Field label="Judul" value={f.judul} onChange={(v) => setF({ ...f, judul: v })} />
       <Field label="Keterangan" value={f.keterangan} onChange={(v) => setF({ ...f, keterangan: v })} />
       <FileField label="Foto atau dokumen galeri" value={f.gambar_url} onChange={(v) => setF({ ...f, gambar_url: v })} />
@@ -517,7 +525,8 @@ function FileField({
     <div className="block text-sm">
       <span className="mb-1.5 block font-semibold text-ink/80">{label}</span>
       <label className="flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl border border-dashed border-brand/30 bg-white/60 px-3 py-2.5 text-sm text-ink/75 transition hover:border-brand/60 hover:bg-white/80">
-        <span className="min-w-0 truncate">{uploading ? "Mengunggah berkas…" : "Pilih PNG, JPG, atau PDF"}</span>
+        <span className="min-w-0 truncate">{uploading ? "Mengunggah berkas…" : "Pilih berkas"}</span>
+        <span aria-hidden="true" className="shrink-0 rounded-lg border border-brand/20 bg-white/70 px-3 py-1.5 text-xs font-semibold text-brand">Unggah</span>
         <input
           type="file"
           accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf"
